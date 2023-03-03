@@ -26,8 +26,12 @@ struct ContentView: View {
                 }
                 
                 ForEach(0..<3) { number in
-                    Button(choices[number]) {
+                    Button {
                         choiceTapped(number)
+                    } label: {
+                        Image(choices[number])
+                            .resizable()
+                            .frame(width: 100.0, height: 100.0)
                     }
                 }
             }
