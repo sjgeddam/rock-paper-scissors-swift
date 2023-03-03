@@ -8,12 +8,20 @@
 import SwiftUI
 
 
+struct PrettyFont: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(.white)
+            .fontWeight(.bold)
+            .font(.system(size: 30))
+            .shadow(color: .black, radius: 1)
+    }
+}
 
 struct ContentView: View {
    
     @State private var shouldWin = Bool.random()
     @State private var appChoice = Int.random(in: 0..<3)
-    //@State private var playerChoice = ""
     @State private var playerScore = 0
     @State private var numRounds = 0
     @State private var gameEnd = false
@@ -22,11 +30,10 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color(red: 0, green: 0.33, blue: 0.5)
+            Color("myColor")
                 .ignoresSafeArea()
             VStack(spacing: 20) {
                 VStack {
-                    
                     Text("App Choice: \(choices[appChoice])")
                     if shouldWin {
                         Text("You need to win")
@@ -35,9 +42,8 @@ struct ContentView: View {
                     }
                     Text("Player Move: ")
                 }
-                .foregroundColor(.white)
-                .fontWeight(.bold)
-                .font(.system(size: 30))
+                .modifier(PrettyFont())
+                
                 
                 ForEach(0..<3) { number in
                     Button {
@@ -45,23 +51,24 @@ struct ContentView: View {
                     } label: {
                         Image(choices[number])
                             .resizable()
-                            .frame(width: 150.0, height: 150.0)
+                            .frame(width: 120.0, height: 120.0)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
                 
-                Text("Player Score: \(playerScore)")
-                    .foregroundColor(.white)
-                    .fontWeight(.bold)
-                    .font(.system(size: 30))
+                Text("Player Score: \(playerScore)/\(numRounds)")
+                    .modifier(PrettyFont())
+            }
+            .alert("GAME OVER! Final score is \(playerScore)/\(numRounds)", isPresented: $gameEnd) {
+                Button("Restart Game", action: gameOver)
             }
         }
     }
     
     func choiceTapped(_ playerChoice: Int) {
+        // counting number of rounds
         numRounds += 1;
-        // need to determine if player won or lost
-        
+    
         // if player needs to win
         if shouldWin {
             if (choices[appChoice] == "Rock") {
@@ -86,6 +93,19 @@ struct ContentView: View {
                 if choices[playerChoice] == "Rock" { playerScore += 1 }
             }
         }
+        
+        if (numRounds == 10) {
+            gameEnd = true;
+        }
+        
+        shouldWin.toggle()
+        appChoice = Int.random(in: 0..<3)
+    }
+    
+    func gameOver() {
+        // reset player score & num rounds after 10 rounds of playing
+        numRounds = 0
+        playerScore = 0
     }
     
 }
