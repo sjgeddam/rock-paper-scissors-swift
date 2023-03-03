@@ -13,6 +13,7 @@ struct ContentView: View {
    
     @State private var shouldWin = Bool.random()
     @State private var appChoice = Int.random(in: 0..<3)
+    //@State private var playerChoice = ""
     @State private var playerScore = 0
     @State private var numRounds = 0
     @State private var gameEnd = false
@@ -57,8 +58,34 @@ struct ContentView: View {
         }
     }
     
-    func choiceTapped(_ choice: Int) {
+    func choiceTapped(_ playerChoice: Int) {
+        numRounds += 1;
+        // need to determine if player won or lost
         
+        // if player needs to win
+        if shouldWin {
+            if (choices[appChoice] == "Rock") {
+                if choices[playerChoice] == "Paper" { playerScore += 1 }
+            }
+            if (choices[appChoice] == "Scissors") {
+                if choices[playerChoice] == "Rock" { playerScore += 1 }
+            }
+            if (choices[appChoice] == "Paper") {
+                if choices[playerChoice] == "Scissors" { playerScore += 1 }
+            }
+            
+        // if player needs to lose
+        } else {
+            if (choices[appChoice] == "Rock") {
+                if choices[playerChoice] == "Scissors" { playerScore += 1 }
+            }
+            if (choices[appChoice] == "Scissors") {
+                if choices[playerChoice] == "Paper" { playerScore += 1 }
+            }
+            if (choices[appChoice] == "Paper") {
+                if choices[playerChoice] == "Rock" { playerScore += 1 }
+            }
+        }
     }
     
 }
